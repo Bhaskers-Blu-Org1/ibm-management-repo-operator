@@ -135,7 +135,7 @@ build-s390x:
 # Release section
 ############################################################
 
-release: clean build push-amd64 push-ppc64le push-s390x push-multi-arch ## Release multi-arch operator image
+images: clean build push-amd64 push-ppc64le push-s390x push-multi-arch ## Release multi-arch operator image
 
 push-amd64:
 	docker push $(REGISTRY)/$(IMG)-amd64:$(VERSION)
@@ -182,7 +182,7 @@ uninstall: ## Uninstall all that all performed in the $ make install
 	@echo ....... Deleting Operator .......
 	- kubectl delete -f deploy/operator.yaml -n ${NAMESPACE}
 	@echo ....... Deleting CRDs.......
-	- kubectl delete -f deploy/crds/operator.ibm.com_management-repocharts_crd.yaml
+	- kubectl delete -f deploy/crds/operator.ibm.com_mgmtrepo_crd.yaml
 	@echo ....... Deleting Rules and Service Account .......
 	- kubectl delete -f deploy/role_binding.yaml -n ${NAMESPACE}
 	- kubectl delete -f deploy/service_account.yaml -n ${NAMESPACE}
