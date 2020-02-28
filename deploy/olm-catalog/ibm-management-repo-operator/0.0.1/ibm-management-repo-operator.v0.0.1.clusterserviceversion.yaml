@@ -97,7 +97,7 @@ spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
     owned:
-    - description: MgmtRepo is the Schema for the ICP Catalog Chart
+    - description: MgmtRepo is the for ibm management repo chart
       displayName: IBM Management repo Operator
       kind: MgmtRepo
       name: mgmtrepos.operator.ibm.com
