@@ -1,0 +1,254 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "operator.ibm.com/v1alpha1",
+          "kind": "MgmtRepo",
+          "metadata": {
+            "name": "mgmt-repo"
+          },
+          "spec": {
+            "arch": "",
+            "auditService": {
+              "config": {
+                "enabled": true
+              },
+              "image": {
+                "pullPolicy": "IfNotPresent",
+                "repository": "quay.io/opencloudio/icp-audit-service",
+                "tag": "3.3.1"
+              },
+              "name": "icp-audit-service"
+            },
+            "mgmtrepo": {
+              "WLP_Creds": {
+                "oidcClientId": "WLP_CLIENT_ID",
+                "oidcClientSecret": "WLP_CLIENT_SECRET",
+                "oidcName": "platform-oidc-credentials",
+                "redirectURL": "http://localhost:3001/auth/liberty/callback"
+              },
+              "env": {
+                "CHARTS_REPO_NAME": "mgmt-charts",
+                "CLUSTER_CA_DOMAIN": "mycluster.icp",
+                "CLUSTER_PORT": 8443,
+                "PROXY_ROUTE": "mgmt-repo"
+              },
+              "image": {
+                "name": "mgmt-repo",
+                "pullPolicy": "IfNotPresent",
+                "repository": "quay.io/opencloudio/icp-helm-repo",
+                "tag": "3.3.0"
+              },
+              "resources": {
+                "limits": {
+                  "cpu": "100m",
+                  "memory": "512Mi"
+                },
+                "requests": {
+                  "cpu": "100m",
+                  "memory": "512Mi"
+                }
+              },
+              "volumeMounts": {
+                "mgmtAssetsMountPath": "/home/node/app/assets",
+                "mgmtAssetsName": "mgmt-assets"
+              }
+            },
+            "mongo": {
+              "clientcertssecret": "icp-mongodb-client-cert",
+              "clustercertssecret": "cluster-ca-cert",
+              "host": "mongodb",
+              "password": {
+                "key": "password",
+                "secret": "icp-mongodb-admin"
+              },
+              "port": 27017,
+              "username": {
+                "key": "user",
+                "secret": "icp-mongodb-admin"
+              }
+            },
+            "nodeSelector": {
+              "master": "true"
+            },
+            "replicaCount": 1,
+            "runAsUser": 65534,
+            "tolerations": [
+              {
+                "effect": "NoSchedule",
+                "key": "dedicated",
+                "operator": "Exists"
+              },
+              {
+                "key": "CriticalAddonsOnly",
+                "operator": "Exists"
+              }
+            ]
+          }
+        }
+      ]
+    capabilities: Basic Install
+  name: ibm-management-repo-operator.v0.0.1
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - description: MgmtRepo is the for ibm management repo chart
+      displayName: IBM Management repo Operator
+      kind: MgmtRepo
+      name: mgmtrepos.operator.ibm.com
+      version: v1alpha1
+  description: IBM Management repo Operator provides helm management repo service
+  displayName: Ibm Management Repo Operator
+  install:
+    spec:
+      deployments:
+      - name: ibm-management-repo-operator
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              name: ibm-management-repo-operator
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                name: ibm-management-repo-operator
+            spec:
+              containers:
+              - env:
+                - name: WATCH_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.annotations['olm.targetNamespaces']
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+                - name: OPERATOR_NAME
+                  value: ibm-management-repo-operator
+                image: quay.io/opencloudio/ibm-management-repo-operator
+                imagePullPolicy: Always
+                name: ibm-management-repo-operator
+                resources: {}
+              serviceAccountName: ibm-management-repo-operator
+      permissions:
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - services
+          - services/finalizers
+          - endpoints
+          - persistentvolumeclaims
+          - events
+          - configmaps
+          - secrets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - apps
+          resources:
+          - deployments
+          - daemonsets
+          - replicasets
+          - statefulsets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - namespaces
+          verbs:
+          - get
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          - secrets
+          verbs:
+          - '*'
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+        - apiGroups:
+          - monitoring.coreos.com
+          resources:
+          - servicemonitors
+          verbs:
+          - get
+          - create
+        - apiGroups:
+          - apps
+          resourceNames:
+          - ibm-management-repo-operator
+          resources:
+          - deployments/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          verbs:
+          - get
+        - apiGroups:
+          - apps
+          resources:
+          - replicasets
+          - deployments
+          verbs:
+          - get
+        - apiGroups:
+          - charts.helm.k8s.io
+          resources:
+          - '*'
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        serviceAccountName: ibm-management-repo-operator
+    strategy: deployment
+  installModes:
+  - supported: true
+    type: OwnNamespace
+  - supported: true
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - IBM
+  - Cloud
+  maintainers:
+  - email: support@ibm.com
+    name: IBM Support
+  maturity: alpha
+    name: IBM
+  replaces: ibm-management-repo-operator.v0.0.0
+  version: 0.0.1
