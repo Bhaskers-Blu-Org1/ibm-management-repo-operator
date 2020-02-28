@@ -80,7 +80,7 @@ lint: lint-all
 
 generate-csv: ## Generate CSV
 	- operator-sdk generate csv --csv-version $(CSV_VERSION)
-	@cp deploy/crds/operator.ibm.com_management-repocharts_crd.yaml deploy/olm-catalog/$(NAMESPACE)/$(CSV_VERSION)/
+	@cp deploy/crds/operator.ibm.com_mgmtrepos_crd.yaml deploy/olm-catalog/$(NAMESPACE)/$(CSV_VERSION)/
 
 push-csv: ## Push CSV package to the management-repo
 	@RELEASE=${CSV_VERSION} common/scripts/push-csv.sh
