@@ -163,7 +163,7 @@ Parameter                                       | Description                   
 `mongo.clustercertssecret`|mongoDB cluster cert secret|cluster-ca-cert
 `mongo.clientcertssecret`|mongoDB client cert secret|cluster-ca-cert
 `auditService.name`|audit service container name|icp-audit-service
-`auditService.image.repository`|audit service image path|ibmcom/icp-audit-service
+`auditService.image.repository`|audit service image path|quay.io/opencloudio/icp-audit-service
 `auditService.image.tag`|audit service image tag|latest
 `auditService.image.pullPolicy`|audit service image pull policy|IfNotPresent
 `auditService.config.enabled`|audit service container enabled|true

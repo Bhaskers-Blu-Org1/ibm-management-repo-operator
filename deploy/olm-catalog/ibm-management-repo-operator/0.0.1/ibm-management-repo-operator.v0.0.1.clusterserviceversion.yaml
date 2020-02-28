@@ -18,7 +18,7 @@ metadata:
               },
               "image": {
                 "pullPolicy": "IfNotPresent",
-                "repository": "ibmcom/icp-audit-service",
+                "repository": "quay.io/opencloudio/icp-audit-service",
                 "tag": "3.3.1"
               },
               "name": "icp-audit-service"
@@ -95,8 +95,14 @@ metadata:
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
-  customresourcedefinitions: {}
-  description: Placeholder description
+  customresourcedefinitions:
+    owned:
+    - description: MgmtRepo is the Schema for the ICP Catalog Chart
+      displayName: IBM Management repo Operator
+      kind: MgmtRepo
+      name: mgmtrepos.operator.ibm.com
+      version: v1alpha1
+  description: IBM Management repo Operator provides helm management repo service
   displayName: Ibm Management Repo Operator
   install:
     spec:
@@ -236,7 +242,13 @@ spec:
     type: MultiNamespace
   - supported: true
     type: AllNamespaces
+  keywords:
+  - IBM
+  - Cloud
+  maintainers:
+  - email: support@ibm.com
+    name: IBM Support
   maturity: alpha
-  provider: {}
+    name: IBM
   replaces: ibm-management-repo-operator.v0.0.0
   version: 0.0.1
