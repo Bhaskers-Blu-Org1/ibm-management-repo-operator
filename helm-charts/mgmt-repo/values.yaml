@@ -21,7 +21,7 @@ mgmtrepo:
   image:
     name: mgmt-repo
     pullPolicy: IfNotPresent
-    repository: ibmcom/icp-helm-repo
+    repository: quay.io/opencloudio/icp-helm-repo
     tag: 3.3.0
   resources:
     limits:
