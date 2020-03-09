@@ -35,7 +35,7 @@ mgmtrepo:
     mgmtAssetsName: mgmt-assets
 mongo:
   clientcertssecret: icp-mongodb-client-cert
-  clustercertssecret: cluster-ca-cert
+  clustercertssecret: mongodb-root-ca-cert
   host: mongodb
   password:
     key: password
@@ -44,8 +44,7 @@ mongo:
   username:
     key: user
     secret: icp-mongodb-admin
-nodeSelector:
-  master: "true"
+nodeSelector: {}
 replicaCount: 1
 runAsUser: 65534
 tolerations:

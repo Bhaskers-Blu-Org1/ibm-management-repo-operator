@@ -1,12 +1,10 @@
 apiVersion: operator.ibm.com/v1alpha1
-kind: MgmtRepo
+kind: ManagementRepo
 metadata:
-  name: mgmt-repo
+  name: default-management-repo
 spec:
   # Default values copied from <project_dir>/helm-charts/mgmt-repo/values.yaml
-  # Default values for chart2.
-  # This is a YAML-formatted file.
-  # Declare variables to be passed into your templates
+  
   arch: ""
   auditService:
     config:
@@ -30,7 +28,6 @@ spec:
     image:
       name: mgmt-repo
       pullPolicy: IfNotPresent
-      #repository: ibmcom/icp-helm-repo
       repository: quay.io/opencloudio/icp-helm-repo
       tag: 3.3.0
     resources:
@@ -45,7 +42,7 @@ spec:
       mgmtAssetsName: mgmt-assets
   mongo:
     clientcertssecret: icp-mongodb-client-cert
-    clustercertssecret: cluster-ca-cert
+    clustercertssecret: mongodb-root-ca-cert
     host: mongodb
     password:
       key: password
@@ -54,8 +51,7 @@ spec:
     username:
       key: user
       secret: icp-mongodb-admin
-  nodeSelector:
-    master: "true"
+  nodeSelector: {}
   replicaCount: 1
   runAsUser: 65534
   tolerations:
@@ -64,3 +60,4 @@ spec:
     operator: Exists
   - key: CriticalAddonsOnly
     operator: Exists
+  
